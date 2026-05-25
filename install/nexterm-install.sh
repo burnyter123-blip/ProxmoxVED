@@ -13,26 +13,6 @@ setting_up_container
 network_check
 update_os
 
-msg_info "Installing Dependencies"
-$STD apt install -y \
-  libssl3 \
-  libssh2-1 \
-  libcurl4 \
-  libcairo2 \
-  libpng16-16 \
-  libpango-1.0-0 \
-  libpangocairo-1.0-0 \
-  libwebp7 \
-  libossp-uuid16 \
-  libpulse0 \
-  libvorbisenc2 \
-  libvorbis0a \
-  libogg0 \
-  libvncclient1 \
-  libfreerdp2-2 \
-  libfreerdp-client2-2
-msg_ok "Installed Dependencies"
-
 case "$(dpkg --print-architecture)" in
   amd64) NX_ARCH="x64" ;;
   arm64) NX_ARCH="arm64" ;;
