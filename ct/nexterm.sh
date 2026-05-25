@@ -39,20 +39,31 @@ function update_script() {
       ;;
   esac
 
-  if check_for_gh_release "nexterm-engine" "gnmyt/Nexterm"; then
-    msg_info "Stopping Services"
-    systemctl stop nexterm-server nexterm-engine
-    msg_ok "Stopped Services"
+  ENGINE_UPDATE=0
+  SERVER_UPDATE=0
+  check_for_gh_release "nexterm-engine" "gnmyt/Nexterm" && ENGINE_UPDATE=1
+  check_for_gh_release "nexterm-server" "gnmyt/Nexterm" && SERVER_UPDATE=1
 
-    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "nexterm-engine" "gnmyt/Nexterm" "prebuild" "latest" "/opt/nexterm/engine" "nexterm-engine-linux-${NX_ARCH}.tar.gz"
-    fetch_and_deploy_gh_release "nexterm-server" "gnmyt/Nexterm" "singlefile" "latest" "/opt/nexterm/server" "nexterm-server-linux-${NX_ARCH}"
-
-    msg_info "Starting Services"
-    systemctl start nexterm-engine
-    systemctl start nexterm-server
-    msg_ok "Started Services"
-    msg_ok "Updated successfully!"
+  if [[ $ENGINE_UPDATE -eq 0 && $SERVER_UPDATE -eq 0 ]]; then
+    exit
   fi
+
+  msg_info "Stopping Services"
+  systemctl stop nexterm-server nexterm-engine
+  msg_ok "Stopped Services"
+
+  if [[ $ENGINE_UPDATE -eq 1 ]]; then
+    CLEAN_INSTALL=1 fetch_and_deploy_gh_release "nexterm-engine" "gnmyt/Nexterm" "prebuild" "latest" "/opt/nexterm/engine" "nexterm-engine-linux-${NX_ARCH}.tar.gz"
+  fi
+  if [[ $SERVER_UPDATE -eq 1 ]]; then
+    fetch_and_deploy_gh_release "nexterm-server" "gnmyt/Nexterm" "singlefile" "latest" "/opt/nexterm/server" "nexterm-server-linux-${NX_ARCH}"
+  fi
+
+  msg_info "Starting Services"
+  systemctl start nexterm-engine
+  systemctl start nexterm-server
+  msg_ok "Started Services"
+  msg_ok "Updated successfully!"
   exit
 }
 

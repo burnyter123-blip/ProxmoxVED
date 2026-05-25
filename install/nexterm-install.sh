@@ -43,7 +43,7 @@ SERVER_PORT=6989
 LOCAL_ENGINE_TOKEN=${LOCAL_ENGINE_TOKEN}
 ENCRYPTION_KEY=${ENCRYPTION_KEY}
 EOF
-chmod 0640 /etc/nexterm-server/server.env
+chmod 0640 /etc/nexterm-engine/config.yaml /etc/nexterm-server/server.env
 msg_ok "Configured Nexterm"
 
 msg_info "Creating Engine Service"
